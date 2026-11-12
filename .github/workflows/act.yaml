@@ -99,7 +99,7 @@ on: # yamllint disable-line rule:truthy
     pull_request:
     push:
         branches:
-            - bootstrap-measles # Until main has this workflow
+            - library-skeleton # Until main has this workflow
             - main
     workflow_dispatch:
 
