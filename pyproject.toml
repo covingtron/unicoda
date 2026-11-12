@@ -1,0 +1,90 @@
+[build-system]
+backend-path = ['']
+build-backend = 'pypi_compatible_build'
+requires = ['setuptools>=77', 'setuptools_scm']
+
+[project]
+classifiers = [
+    
+    'Operating System :: OS Independent',
+    
+    'Programming Language :: Python :: 3.12',
+    
+    'Topic :: Multimedia :: Sound/Audio',
+    
+    'Topic :: Text Processing :: Markup :: HTML',
+    
+]
+description = 'Render music and more with Unicode glyphs and CSS'
+license = 'MPL-2.0'
+name = 'unicoda'
+readme = 'README.md'
+requires-python = '>=3.12'
+dynamic = ['version']
+
+dependencies = [
+    
+]
+
+[project.optional-dependencies]
+build = [
+    'setuptools',
+]
+pre-commit = [
+    'actionlint-py',
+    'basedpyright',
+    'cookiecutter',
+    'django-upgrade',
+    'djlint>=1.45.0',
+    'hadolint-py @ git+https://github.com/AleksaC/hadolint-py.git',
+    'pre-commit-hooks',
+    'pyrefly',
+    'ruff',
+    'shellcheck-py',
+    'shfmt-py',
+    'styleforce',
+    'typos',
+    'validate-pyproject[all]',
+    'yamllint',
+]
+test = [
+    'pytest',
+    'pytest-cov',
+]
+
+[project.urls]
+source = 'https://github.com/covingtron/unicoda'
+
+[tool.coverage.run]
+source_pkgs = ['unicoda']
+
+[tool.pytest.ini_options]
+norecursedirs = ['.venv', 'node_modules', '{{cookiecutter.dot}}']
+
+[tool.setuptools]
+py-modules = ['unicoda']
+
+[tool.setuptools_scm]
+# Skip provider release tags like terraform-provider-cloudflare-v5.27.0-startup.1
+git_describe_command = "git describe --dirty --tags --long --match 'v*'"
+
+[tool.basedpyright]
+extends = '.biobuddies/basedpyright.toml'
+
+[tool.djlint]
+close_void_tags = true
+format_attribute_template_tags = true
+indent = 4
+max_attribute_length = 100
+max_blank_lines = 1
+max_line_length = 100
+quote_style = 'single'
+
+[tool.ruff]
+extend = '.biobuddies/ruff.toml'
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
