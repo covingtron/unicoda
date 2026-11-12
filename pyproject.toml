@@ -24,6 +24,8 @@ dynamic = ['version']
 
 dependencies = [
     
+    'markupsafe',
+    
 ]
 
 [project.optional-dependencies]

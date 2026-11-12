@@ -99,7 +99,7 @@ on: # yamllint disable-line rule:truthy
     pull_request:
     push:
         branches:
-            - library-skeleton # Until main has this workflow
+            - unicode-music # Until main has this workflow
             - main
     workflow_dispatch:
 
