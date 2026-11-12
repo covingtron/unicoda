@@ -1,0 +1,13 @@
+default_context:
+    classifiers:
+        - 'Operating System :: OS Independent'
+        - 'Programming Language :: Python :: 3.12'
+        - 'Topic :: Multimedia :: Sound/Audio'
+        - 'Topic :: Text Processing :: Markup :: HTML'
+    description: Render music and more with Unicode glyphs and CSS
+    github_actions_env:
+        GITHUB_TOKEN: ${{ github.token }}
+        PATH: .venv/bin:/home/runner/.local/bin:/home/runner/.local/share/mise/shims:/usr/bin:/bin
+    languages: Node,Python
+    license: MPL-2.0
+    publish_to_pypi: true
