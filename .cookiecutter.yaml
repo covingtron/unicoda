@@ -4,7 +4,7 @@ default_context:
         - 'Programming Language :: Python :: 3.12'
         - 'Topic :: Multimedia :: Sound/Audio'
         - 'Topic :: Text Processing :: Markup :: HTML'
-    description: Render music and more with Unicode glyphs and CSS
+    description: Render musical notes on a staff with Unicode ♪ and CSS
     github_actions_env:
         GITHUB_TOKEN: ${{ github.token }}
         PATH: .venv/bin:/home/runner/.local/bin:/home/runner/.local/share/mise/shims:/usr/bin:/bin

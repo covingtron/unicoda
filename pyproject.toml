@@ -15,7 +15,7 @@ classifiers = [
     'Topic :: Text Processing :: Markup :: HTML',
     
 ]
-description = 'Render music and more with Unicode glyphs and CSS'
+description = 'Render musical notes on a staff with Unicode ♪ and CSS'
 license = 'MPL-2.0'
 name = 'unicoda'
 readme = 'README.md'
