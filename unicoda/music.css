@@ -1,0 +1,123 @@
+@font-face {
+    font-family: 'Noto Music';
+    src: url('https://raw.githubusercontent.com/google/fonts/main/ofl/notomusic/NotoMusic-Regular.ttf')
+        format('truetype');
+}
+
+.unicoda-music {
+    --staff-size: STAFF_SIZE_REMrem;
+    --staff-step: calc(var(--staff-size) * 0.122);
+    --note-size: calc(var(--staff-step) * 4);
+    margin: 1.5rem 0;
+    color: inherit;
+}
+
+.unicoda-music details {
+    text-align: left;
+}
+
+.unicoda-music .score {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    gap: 0.5rem 0;
+}
+
+.unicoda-music .measure {
+    --width: calc(var(--prefix) + SLOTS_PER_MEASURE * var(--slot));
+    flex: 0 0 var(--width);
+    padding-bottom: 0.5rem;
+    position: relative;
+    break-inside: avoid;
+}
+
+.unicoda-music .staff-items {
+    height: 8rem;
+    user-select: none;
+}
+
+.unicoda-music .lyrics {
+    height: 1.5rem;
+    position: relative;
+    text-align: left;
+}
+
+.unicoda-music [data-pos] {
+    left: calc(var(--prefix) + var(--column) * var(--slot));
+    position: absolute;
+}
+
+.unicoda-music .lyrics > span {
+    top: 0;
+    white-space: pre;
+}
+
+.unicoda-music .measure::before,
+.unicoda-music :is(.clef, .key, .note) {
+    font: var(--note-size) / 1 'Noto Music';
+}
+
+.unicoda-music .measure::before {
+    content: '\1d11a'; /* MUSICAL SYMBOL FIVE-LINE STAFF */
+    font-size: var(--staff-size);
+    left: calc(-0.05 * var(--staff-size) * var(--stretch));
+    position: absolute;
+    top: 2rem;
+    transform: scaleX(var(--stretch));
+    transform-origin: left top;
+}
+
+.unicoda-music .measure::after {
+    border-right: 1px solid;
+    content: '';
+    height: calc(var(--staff-step) * 8);
+    position: absolute;
+    right: 0;
+    top: 2.036rem;
+}
+
+.unicoda-music .final::after {
+    border-right: 4px double;
+}
+.unicoda-music .event {
+    top: 0;
+}
+.unicoda-music .chord {
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+}
+.unicoda-music .note {
+    position: absolute;
+    left: 0;
+    top: calc(2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center));
+    transform: rotate(var(--turn));
+}
+
+.unicoda-music .dot {
+    position: absolute;
+    left: 0.9rem;
+    top: calc(2.036rem + var(--pitch) * var(--staff-step) - 0.6rem);
+}
+
+.unicoda-music .clef {
+    left: 0.1rem;
+    top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
+}
+
+.unicoda-music .key {
+    font-size: 1.5rem;
+    left: 1.8rem;
+    top: calc(2.036rem - 1.5rem * 0.8645);
+}
+
+.unicoda-music .meter {
+    font: bold 1.7rem/1.37 serif;
+    left: 2.45rem;
+    top: 2rem;
+}
+
+.unicoda-music .meter[data-pos^='a'] {
+    top: calc(2rem + 1.7rem * 1.37);
+}
