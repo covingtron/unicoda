@@ -110,7 +110,7 @@
         );
     }
 
-    .unicoda [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
+    .unicoda .measure > div > [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
         font-size: 1.5rem;
         top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
     }
