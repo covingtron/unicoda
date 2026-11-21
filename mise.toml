@@ -1,0 +1,5 @@
+[tasks.build]
+depends = ['render-examples']
+
+[tasks.render-examples]
+run = 'python test_end_to_end.py'

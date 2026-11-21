@@ -1,0 +1,324 @@
+<style>@font-face {
+    font-family: 'Noto Music';
+    src: url('https://raw.githubusercontent.com/google/fonts/main/ofl/notomusic/NotoMusic-Regular.ttf')
+        format('truetype');
+}
+
+.unicoda-music {
+    --staff-size: 4.8rem;
+    --slot: 0.75rem;
+    --staff-step: calc(var(--staff-size) * 0.122);
+    --note-size: calc(var(--staff-step) * 4);
+    margin: 1.5rem 0;
+    color: inherit;
+}
+
+.unicoda-music details {
+    text-align: left;
+}
+
+.unicoda-music .score {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    gap: 0.5rem 0;
+}
+
+.unicoda-music .measure {
+    --prefix: 0.75rem;
+    --width: calc(var(--prefix) + 16 * var(--slot));
+    --stretch: calc(var(--width) / var(--staff-size));
+    flex: 0 0 var(--width);
+    padding-bottom: 0.5rem;
+    position: relative;
+    break-inside: avoid;
+}
+
+.unicoda-music .measure:first-child {
+    --prefix: 3.5rem;
+}
+
+.unicoda-music .staff-items {
+    height: 8rem;
+    user-select: none;
+}
+
+.unicoda-music .lyrics {
+    height: 1.5rem;
+    position: relative;
+    text-align: left;
+}
+
+.unicoda-music [data-pos] {
+    left: calc(var(--prefix) + var(--column) * var(--slot));
+    position: absolute;
+}
+
+.unicoda-music .lyrics > span {
+    top: 0;
+    white-space: pre;
+}
+
+.unicoda-music .measure::before,
+.unicoda-music :is(.clef, .key, .note) {
+    font: var(--note-size) / 1 'Noto Music';
+}
+
+.unicoda-music .measure::before {
+    content: '\1d11a'; /* MUSICAL SYMBOL FIVE-LINE STAFF */
+    font-size: var(--staff-size);
+    left: calc(-0.05 * var(--staff-size) * var(--stretch));
+    position: absolute;
+    top: 2rem;
+    transform: scaleX(var(--stretch));
+    transform-origin: left top;
+}
+
+.unicoda-music .measure::after {
+    border-right: 1px solid;
+    content: '';
+    height: calc(var(--staff-step) * 8);
+    position: absolute;
+    right: 0;
+    top: 2.036rem;
+}
+
+.unicoda-music .final::after {
+    border-right: 4px double;
+}
+.unicoda-music .event {
+    top: 0;
+}
+.unicoda-music .chord {
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+}
+.unicoda-music .note {
+    position: absolute;
+    left: 0;
+    top: calc(2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center));
+    transform: rotate(var(--turn));
+}
+
+.unicoda-music .dot {
+    position: absolute;
+    left: 0.9rem;
+    top: calc(2.036rem + var(--pitch) * var(--staff-step) - 0.6rem);
+}
+
+.unicoda-music .clef {
+    left: 0.1rem;
+    top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
+}
+
+.unicoda-music .key {
+    font-size: 1.5rem;
+    left: 1.8rem;
+    top: calc(2.036rem - 1.5rem * 0.8645);
+}
+
+.unicoda-music .meter {
+    font: bold 1.7rem/1.37 serif;
+    left: 2.45rem;
+    top: 2rem;
+}
+
+.unicoda-music .meter[data-pos^='a'] {
+    top: calc(2rem + 1.7rem * 1.37);
+}
+
+.unicoda-music [data-pos$='04'] {
+    --column: 0;
+}
+.unicoda-music [data-pos$='05'] {
+    --column: 1;
+}
+.unicoda-music [data-pos$='06'] {
+    --column: 2;
+}
+.unicoda-music [data-pos$='07'] {
+    --column: 3;
+}
+.unicoda-music [data-pos$='08'] {
+    --column: 4;
+}
+.unicoda-music [data-pos$='09'] {
+    --column: 5;
+}
+.unicoda-music [data-pos$='10'] {
+    --column: 6;
+}
+.unicoda-music [data-pos$='11'] {
+    --column: 7;
+}
+.unicoda-music [data-pos$='12'] {
+    --column: 8;
+}
+.unicoda-music [data-pos$='13'] {
+    --column: 9;
+}
+.unicoda-music [data-pos$='14'] {
+    --column: 10;
+}
+.unicoda-music [data-pos$='15'] {
+    --column: 11;
+}
+.unicoda-music [data-pos$='16'] {
+    --column: 12;
+}
+.unicoda-music [data-pos$='17'] {
+    --column: 13;
+}
+.unicoda-music [data-pos$='18'] {
+    --column: 14;
+}
+.unicoda-music [data-pos$='19'] {
+    --column: 15;
+}
+
+.unicoda-music .staff-items [data-pos^='g'] {
+    --pitch: -1;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='f'] {
+    --pitch: 0;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='e'] {
+    --pitch: 1;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='d'] {
+    --pitch: 2;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='c'] {
+    --pitch: 3;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='B'] {
+    --pitch: 4;
+    --turn: 180deg;
+    --head-center: 0.127;
+}
+.unicoda-music .staff-items [data-pos^='A'] {
+    --pitch: 5;
+    --turn: 0deg;
+    --head-center: 0.873;
+}
+.unicoda-music .staff-items [data-pos^='G'] {
+    --pitch: 6;
+    --turn: 0deg;
+    --head-center: 0.873;
+}
+.unicoda-music .staff-items [data-pos^='F'] {
+    --pitch: 7;
+    --turn: 0deg;
+    --head-center: 0.873;
+}
+.unicoda-music .staff-items [data-pos^='E'] {
+    --pitch: 8;
+    --turn: 0deg;
+    --head-center: 0.873;
+}
+.unicoda-music .staff-items [data-pos^='D'] {
+    --pitch: 9;
+    --turn: 0deg;
+    --head-center: 0.873;
+}
+</style>
+<figure class="unicoda-music">
+    <figcaption>Scale exercise</figcaption>
+    <div class="score">
+            <div class="measure">
+                <div class="staff-items" aria-hidden="true">
+                        <span class="clef" data-pos="G01">𝄞</span>                        <span class="meter" data-pos="c03">4</span>
+                        <span class="meter" data-pos="a03">4</span>
+                        <span
+                            class="event"
+                            data-pos="D04"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="E08"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="F12"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="G16"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                </div>
+            </div>
+            <div class="measure final">
+                <div class="staff-items" aria-hidden="true">
+                        <span
+                            class="event"
+                            data-pos="A04"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="B08"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="c12"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                        <span
+                            class="event"
+                            data-pos="d16"
+                        >
+                            <span class="note" data-duration="1/4"
+                                >𝅘𝅥</span
+                            >
+                        </span>
+                </div>
+            </div>
+    </div>
+    <details>
+        <summary>Lyrics and ABC source</summary>
+        <pre>T:Scale exercise
+M:4/4
+L:1/4
+K:C
+D E F G | A B c d |]
+</pre>
+    </details>
+</figure>

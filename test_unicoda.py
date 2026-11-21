@@ -1,13 +1,14 @@
 """Check the experimental Unicode music renderer with an original scale exercise."""
 
 from fractions import Fraction
+from pathlib import Path
 from xml.etree.ElementTree import fromstring
 
 from pytest import mark, raises
 
-from unicoda import format_abc, parse_abc, render_abc
+from unicoda import parse_abc, render_abc
 
-scale = 'T:Scale exercise\nM:4/4\nL:1/4\nK:C\nD E F G | A B c d |]'
+scale = (Path(__file__).parent / 'examples' / 'scale.abc').read_text().strip()
 
 
 def test_scale():
@@ -17,15 +18,6 @@ def test_scale():
     assert [note.pitch for note in measures[1].notes] == ['A', 'B', 'c', 'd']
     assert sum(note.duration for note in measures[0].notes) == 1
     assert measures[1].final
-    html = render_abc(scale)
-    assert html.count('class="event"') == 8
-    assert html.count('class="clef"') == 1
-    assert html.count('class="meter"') == 2
-    assert 'https://raw.githubusercontent.com/google/fonts/main/ofl/notomusic/' in html
-    assert 'data:font' not in html
-    assert '<svg' not in html
-    assert format_abc(scale) == html
-    assert render_abc(scale.replace('K:C', 'K:G')).count('class="key"') == 1
 
 
 def test_subdivisions():
