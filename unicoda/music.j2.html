@@ -5,7 +5,7 @@
     <figcaption>{{ headers.get('T', 'Music') }}</figcaption>
     {% for measure in measures %}
         {% set positions = measure.notes | columns %}
-        <div class="measure{{ ' final' if measure.final else '' }}">
+        <div class="measure">
             <div>
                 {% if loop.first %}
                     {# musical symbol g clef #}

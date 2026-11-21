@@ -79,18 +79,6 @@
     transform-origin: left top;
 }
 
-.unicoda .measure::after {
-    border-right: 1px solid;
-    content: '';
-    height: calc(var(--staff-step) * 8);
-    position: absolute;
-    right: 0;
-    top: 2.036rem;
-}
-
-.unicoda .final::after {
-    border-right: 4px double;
-}
 .unicoda .measure > div > [data-pos]:not([data-pos*='-']) {
     top: calc(2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center));
     transform: scaleY(var(--stem-direction));
