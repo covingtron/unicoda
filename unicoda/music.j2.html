@@ -8,8 +8,8 @@
         <div class="measure{{ ' final' if measure.final else '' }}">
             <div class="staff-items">
                 {% if loop.first %}
-                    <span data-pos="G-{{ accidentals | length + 2 }}">𝄞</span
-                    >{# musical symbol g clef #}
+                    {# musical symbol g clef #}
+                    <span data-pos="G-{{ accidentals | length + 2 }}">𝄞</span>
                     {% for pitch, glyph in accidentals %}
                         <span data-pos="{{ pitch }}-{{ loop.revindex + 1 }}">{{ glyph }}</span>
                     {% endfor %}
