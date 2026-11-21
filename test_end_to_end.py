@@ -16,4 +16,6 @@ def test_scale():
 
 
 if __name__ == '__main__':
-    example.with_suffix('.html').write_text(str(render_abc(example.with_suffix('.abc').read_text())))
+    example.with_suffix('.html').write_text(
+        str(render_abc(example.with_suffix('.abc').read_text()))
+    )
