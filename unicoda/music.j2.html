@@ -36,9 +36,6 @@
     {% endfor %}
     <details>
         <summary>ABC source</summary>
-        {% for verse in verses %}
-            <p>{{- verse | select | map('join', ' ') | join(' ') -}}</p>
-        {% endfor %}
         <pre>{{ source }}</pre>
     </details>
 </figure>

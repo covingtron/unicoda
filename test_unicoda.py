@@ -107,9 +107,9 @@ def test_lyric_rows():
         ['five', 'six', '_', ''],
     ]
     assert ''.join(rows[1].itertext()).strip() == 'One two three four'
-    assert [paragraph.text for paragraph in root.findall('.//details/p')] == [
-        'Step- ping up _ then we  come down',
-        'One two three four five six _ ',
+    assert [(element.tag, element.text) for element in root.findall('.//details/*')] == [
+        ('summary', 'ABC source'),
+        ('pre', source),
     ]
     assert all(
         not staff.findall('.//div[@class="lyrics"]')

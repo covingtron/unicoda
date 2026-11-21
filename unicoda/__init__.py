@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 from fractions import Fraction
-from itertools import accumulate, zip_longest
+from itertools import accumulate
 from re import finditer, fullmatch, match
 
 from jinja2 import Environment, PackageLoader
@@ -147,7 +147,6 @@ def render_abc(source: str) -> Markup:
             headers=headers,
             measures=measures,
             source=source,
-            verses=zip_longest(*(measure.lyrics for measure in measures), fillvalue=()),
         )
     )
 
