@@ -37,7 +37,11 @@
     }
 
     .unicoda-music .measure:first-child {
-        --prefix: 3.5rem;
+        --accidental-slot: 0.65rem;
+        --meter-space: 1.05rem;
+        --prefix: calc(
+            1.8rem + (var(--opening-column) - 2) * var(--accidental-slot) + var(--meter-space)
+        );
     }
 
     .unicoda-music .staff-items {
@@ -118,13 +122,16 @@
 
     .unicoda-music .key {
         font-size: 1.5rem;
-        left: 1.8rem;
-        top: calc(2.036rem - 1.5rem * 0.8645);
+        left: calc(
+            var(--prefix) - var(--meter-space) - (var(--opening-column) - 1) *
+                var(--accidental-slot)
+        );
+        top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
     }
 
     .unicoda-music .meter {
         font: bold 1.7rem/1.37 serif;
-        left: 2.45rem;
+        left: calc(var(--prefix) - var(--meter-space));
         top: 2rem;
     }
 
@@ -132,52 +139,85 @@
         top: calc(2rem + 1.7rem * 1.37);
     }
 
-    .unicoda-music [data-pos$='04'] {
+    .unicoda-music .measure:has(.clef[data-pos$='-2']),
+    .unicoda-music .key[data-pos$='-2'] {
+        --opening-column: 2;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-3']),
+    .unicoda-music .key[data-pos$='-3'] {
+        --opening-column: 3;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-4']),
+    .unicoda-music .key[data-pos$='-4'] {
+        --opening-column: 4;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-5']),
+    .unicoda-music .key[data-pos$='-5'] {
+        --opening-column: 5;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-6']),
+    .unicoda-music .key[data-pos$='-6'] {
+        --opening-column: 6;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-7']),
+    .unicoda-music .key[data-pos$='-7'] {
+        --opening-column: 7;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-8']),
+    .unicoda-music .key[data-pos$='-8'] {
+        --opening-column: 8;
+    }
+    .unicoda-music .measure:has(.clef[data-pos$='-9']),
+    .unicoda-music .key[data-pos$='-9'] {
+        --opening-column: 9;
+    }
+
+    .unicoda-music [data-pos$='01'] {
         --column: 0;
     }
-    .unicoda-music [data-pos$='05'] {
+    .unicoda-music [data-pos$='02'] {
         --column: 1;
     }
-    .unicoda-music [data-pos$='06'] {
+    .unicoda-music [data-pos$='03'] {
         --column: 2;
     }
-    .unicoda-music [data-pos$='07'] {
+    .unicoda-music [data-pos$='04'] {
         --column: 3;
     }
-    .unicoda-music [data-pos$='08'] {
+    .unicoda-music [data-pos$='05'] {
         --column: 4;
     }
-    .unicoda-music [data-pos$='09'] {
+    .unicoda-music [data-pos$='06'] {
         --column: 5;
     }
-    .unicoda-music [data-pos$='10'] {
+    .unicoda-music [data-pos$='07'] {
         --column: 6;
     }
-    .unicoda-music [data-pos$='11'] {
+    .unicoda-music [data-pos$='08'] {
         --column: 7;
     }
-    .unicoda-music [data-pos$='12'] {
+    .unicoda-music [data-pos$='09'] {
         --column: 8;
     }
-    .unicoda-music [data-pos$='13'] {
+    .unicoda-music [data-pos$='10'] {
         --column: 9;
     }
-    .unicoda-music [data-pos$='14'] {
+    .unicoda-music [data-pos$='11'] {
         --column: 10;
     }
-    .unicoda-music [data-pos$='15'] {
+    .unicoda-music [data-pos$='12'] {
         --column: 11;
     }
-    .unicoda-music [data-pos$='16'] {
+    .unicoda-music [data-pos$='13'] {
         --column: 12;
     }
-    .unicoda-music [data-pos$='17'] {
+    .unicoda-music [data-pos$='14'] {
         --column: 13;
     }
-    .unicoda-music [data-pos$='18'] {
+    .unicoda-music [data-pos$='15'] {
         --column: 14;
     }
-    .unicoda-music [data-pos$='19'] {
+    .unicoda-music [data-pos$='16'] {
         --column: 15;
     }
 
@@ -242,102 +282,101 @@
     <div class="score">
         <div class="measure">
             <div class="staff-items" aria-hidden="true">
-                <span class="clef" data-pos="G01">𝄞</span>
-                <span class="meter" data-pos="c03">4</span>
-                <span class="meter" data-pos="a03">4</span>
-                <span class="key" data-pos="f02">♯</span>
-                <span class="event" data-pos="G04">
+                <span class="clef" data-pos="G-3">𝄞</span> <span class="key" data-pos="f-2">♯</span>
+                <span class="meter" data-pos="c-1">4</span>
+                <span class="meter" data-pos="a-1">4</span>
+                <span class="event" data-pos="G01">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="A08">
+                <span class="event" data-pos="A05">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="B12">
+                <span class="event" data-pos="B09">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="c16">
+                <span class="event" data-pos="c13">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
             </div>
             <div class="lyrics">
-                <span data-pos="A04">Step- </span><span data-pos="A08">ping </span
-                ><span data-pos="A12">up </span><span data-pos="A16">the </span>
+                <span data-pos="A01">Step- </span><span data-pos="A05">ping </span
+                ><span data-pos="A09">up </span><span data-pos="A13">the </span>
             </div>
             <div class="lyrics">
-                <span data-pos="B04">One </span><span data-pos="B08">two </span
-                ><span data-pos="B12">three </span><span data-pos="B16">four </span>
+                <span data-pos="B01">One </span><span data-pos="B05">two </span
+                ><span data-pos="B09">three </span><span data-pos="B13">four </span>
             </div>
         </div>
         <div class="measure">
             <div class="staff-items" aria-hidden="true">
-                <span class="event" data-pos="d04">
+                <span class="event" data-pos="d01">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="e08">
+                <span class="event" data-pos="e05">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="f12">
+                <span class="event" data-pos="f09">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="g16">
+                <span class="event" data-pos="g13">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
             </div>
             <div class="lyrics">
-                <span data-pos="A04">scale </span><span data-pos="A08">we </span
-                ><span data-pos="A12">climb </span><span data-pos="A16">high </span>
+                <span data-pos="A01">scale </span><span data-pos="A05">we </span
+                ><span data-pos="A09">climb </span><span data-pos="A13">high </span>
             </div>
             <div class="lyrics">
-                <span data-pos="B04">five </span><span data-pos="B08">six </span
-                ><span data-pos="B12">seven </span><span data-pos="B16">eight </span>
+                <span data-pos="B01">five </span><span data-pos="B05">six </span
+                ><span data-pos="B09">seven </span><span data-pos="B13">eight </span>
             </div>
         </div>
         <div class="measure">
             <div class="staff-items" aria-hidden="true">
-                <span class="event" data-pos="g04">
+                <span class="event" data-pos="g01">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="f08">
+                <span class="event" data-pos="f05">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="e12">
+                <span class="event" data-pos="e09">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="d16">
+                <span class="event" data-pos="d13">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
             </div>
             <div class="lyrics">
-                <span data-pos="A04">Step- </span><span data-pos="A08">ping </span
-                ><span data-pos="A12">down </span><span data-pos="A16">the </span>
+                <span data-pos="A01">Step- </span><span data-pos="A05">ping </span
+                ><span data-pos="A09">down </span><span data-pos="A13">the </span>
             </div>
             <div class="lyrics">
-                <span data-pos="B04">eight </span><span data-pos="B08">seven </span
-                ><span data-pos="B12">six </span><span data-pos="B16">five </span>
+                <span data-pos="B01">eight </span><span data-pos="B05">seven </span
+                ><span data-pos="B09">six </span><span data-pos="B13">five </span>
             </div>
         </div>
         <div class="measure final">
             <div class="staff-items" aria-hidden="true">
-                <span class="event" data-pos="c04">
+                <span class="event" data-pos="c01">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="B08">
+                <span class="event" data-pos="B05">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="A12">
+                <span class="event" data-pos="A09">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
-                <span class="event" data-pos="G16">
+                <span class="event" data-pos="G13">
                     <span class="note" data-duration="1/4">𝅘𝅥</span>
                 </span>
             </div>
             <div class="lyrics">
-                <span data-pos="A04">scale </span><span data-pos="A08">we </span
-                ><span data-pos="A12">come </span><span data-pos="A16">home </span>
+                <span data-pos="A01">scale </span><span data-pos="A05">we </span
+                ><span data-pos="A09">come </span><span data-pos="A13">home </span>
             </div>
             <div class="lyrics">
-                <span data-pos="B04">four </span><span data-pos="B08">three </span
-                ><span data-pos="B12">two </span><span data-pos="B16">one </span>
+                <span data-pos="B01">four </span><span data-pos="B05">three </span
+                ><span data-pos="B09">two </span><span data-pos="B13">one </span>
             </div>
         </div>
     </div>

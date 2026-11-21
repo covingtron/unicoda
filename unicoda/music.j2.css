@@ -36,7 +36,9 @@
 }
 
 .unicoda-music .measure:first-child {
-    --prefix: 3.5rem;
+    --accidental-slot: 0.65rem;
+    --meter-space: 1.05rem;
+    --prefix: calc(1.8rem + (var(--opening-column) - 2) * var(--accidental-slot) + var(--meter-space));
 }
 
 .unicoda-music .staff-items {
@@ -115,13 +117,15 @@
 
 .unicoda-music .key {
     font-size: 1.5rem;
-    left: 1.8rem;
-    top: calc(2.036rem - 1.5rem * 0.8645);
+    left: calc(
+        var(--prefix) - var(--meter-space) - (var(--opening-column) - 1) * var(--accidental-slot)
+    );
+    top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
 }
 
 .unicoda-music .meter {
     font: bold 1.7rem/1.37 serif;
-    left: 2.45rem;
+    left: calc(var(--prefix) - var(--meter-space));
     top: 2rem;
 }
 
@@ -129,9 +133,16 @@
     top: calc(2rem + 1.7rem * 1.37);
 }
 
-{% for column in range(4, 20) %}
+{% for column in range(2, 10) %}
+.unicoda-music .measure:has(.clef[data-pos$='-{{ column }}']),
+.unicoda-music .key[data-pos$='-{{ column }}'] {
+    --opening-column: {{ column }};
+}
+{% endfor %}
+
+{% for column in range(1, 17) %}
 .unicoda-music [data-pos$='{{ '%02d' | format(column) }}'] {
-    --column: {{ column - 4 }};
+    --column: {{ column - 1 }};
 }
 {% endfor %}
 

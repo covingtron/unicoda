@@ -8,6 +8,11 @@ from re import finditer, fullmatch, match
 from jinja2 import Environment, PackageLoader
 from markupsafe import Markup
 
+key_signatures = {
+    'C': (),
+    'G': (('f', '♯'),),  # music sharp sign
+}
+
 
 @dataclass
 class Note:
@@ -109,7 +114,7 @@ def parse_abc(source: str) -> tuple[dict[str, str], list[Measure]]:  # noqa: C90
                 raise ValueError('Music follows the final bar')
             if not {'M', 'L', 'K'} <= headers.keys():
                 raise ValueError('Specify M:, L:, and K: before the music')
-            if headers['K'] not in {'C', 'G'} or headers['M'] != '4/4':
+            if headers['K'] not in key_signatures or headers['M'] != '4/4':
                 raise ValueError('This renderer supports K:C or K:G and M:4/4')
             preceding = read_notes(line, Fraction(headers['L']))
             if any(sum(note.duration for note in measure.notes) != 1 for measure in preceding):
@@ -122,7 +127,7 @@ def parse_abc(source: str) -> tuple[dict[str, str], list[Measure]]:  # noqa: C90
 
 def columns(notes: list[Note]) -> list[int]:
     """Return the starting column of each note on the sixteenth-note grid."""
-    return list(accumulate((int(note.duration * 16) for note in notes), initial=4))[:-1]
+    return list(accumulate((int(note.duration * 16) for note in notes), initial=1))[:-1]
 
 
 def glyph(duration: Fraction) -> str:
@@ -144,6 +149,7 @@ def render_abc(source: str) -> Markup:
     headers, measures = parse_abc(source)
     return Markup(  # noqa: S704 Jinja autoescapes user input
         environment.get_template('music.j2.html').render(
+            accidentals=key_signatures[headers['K']],
             headers=headers,
             measures=measures,
             source=source,

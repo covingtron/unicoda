@@ -56,22 +56,30 @@ def test_chords():
     assert not root.findall('.//script')
 
 
-def test_coordinates():
-    html = str(render_abc('M:4/4\nL:1/4\nK:C\nD/ E/ F3/2 G/ A | B2 c2 |]'))
+@mark.parametrize(
+    ('key', 'clef_position', 'key_positions'), (('C', 'G-2', []), ('G', 'G-3', ['f-2']))
+)
+def test_coordinates(key: str, clef_position: str, key_positions: list[str]):
+    html = str(render_abc(f'M:4/4\nL:1/4\nK:{key}\nD/ E/ F3/2 G/ A | B2 c2 |]'))
     root = fromstring(f'<main>{html}</main>')  # noqa: S314 generated from fixture
     assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="event"]')] == [
-        'D04',
-        'E06',
-        'F08',
-        'G14',
-        'A16',
-        'B04',
-        'c12',
+        'D01',
+        'E03',
+        'F05',
+        'G11',
+        'A13',
+        'B01',
+        'c09',
     ]
-    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="clef"]')] == ['G01']
+    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="clef"]')] == [
+        clef_position
+    ]
+    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="key"]')] == (
+        key_positions
+    )
     assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="meter"]')] == [
-        'c03',
-        'a03',
+        'c-1',
+        'a-1',
     ]
     assert 'style="left:' not in html
     assert not root.findall('.//*[@style]')
@@ -95,10 +103,10 @@ def test_lyric_rows():
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
     rows = root.findall('.//div[@class="lyrics"]')
     assert [[span.attrib['data-pos'] for span in row] for row in rows] == [
-        ['A04', 'A08', 'A12', 'A16'],
-        ['B04', 'B08', 'B12', 'B16'],
-        ['A04', 'A08', 'A12', 'A16'],
-        ['B04', 'B08', 'B12', 'B16'],
+        ['A01', 'A05', 'A09', 'A13'],
+        ['B01', 'B05', 'B09', 'B13'],
+        ['A01', 'A05', 'A09', 'A13'],
+        ['B01', 'B05', 'B09', 'B13'],
     ]
     assert [[(span.text or '').strip() for span in row] for row in rows] == [
         ['Step-', 'ping', 'up', '_'],

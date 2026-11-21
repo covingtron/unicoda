@@ -9,12 +9,15 @@
             <div class="measure{{ ' final' if measure.final else '' }}">
                 <div class="staff-items" aria-hidden="true">
                     {% if loop.first %}
-                        <span class="clef" data-pos="G01">𝄞</span>{# musical symbol g clef #}
-                        <span class="meter" data-pos="c03">4</span>
-                        <span class="meter" data-pos="a03">4</span>
-                        {% if headers['K'] == 'G' %}
-                            <span class="key" data-pos="f02">♯</span>{# music sharp sign #}
-                        {% endif %}
+                        <span class="clef" data-pos="G-{{ accidentals | length + 2 }}">𝄞</span
+                        >{# musical symbol g clef #}
+                        {% for pitch, glyph in accidentals %}
+                            <span class="key" data-pos="{{ pitch }}-{{ loop.revindex + 1 }}"
+                                >{{ glyph }}</span
+                            >
+                        {% endfor %}
+                        <span class="meter" data-pos="c-1">4</span>
+                        <span class="meter" data-pos="a-1">4</span>
                     {% endif %}
                     {% for note in measure.notes %}
                         <span
