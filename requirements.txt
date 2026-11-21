@@ -39,7 +39,9 @@ idna==3.20
 iniconfig==2.3.1
     # via pytest
 jinja2==3.1.6
-    # via cookiecutter
+    # via
+    #   unicoda (pyproject.toml)
+    #   cookiecutter
 jsbeautifier==2.0.3
     # via
     #   cssbeautifier
@@ -49,7 +51,9 @@ json5==0.17.3
 markdown-it-py==4.3.0
     # via rich
 markupsafe==3.0.4
-    # via jinja2
+    # via
+    #   unicoda (pyproject.toml)
+    #   jinja2
 mdurl==0.1.2
     # via markdown-it-py
 nodejs-wheel-binaries==24.19.0

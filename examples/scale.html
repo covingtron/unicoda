@@ -1,0 +1,329 @@
+<style>
+    @font-face {
+        font-family: 'Noto Music';
+        src: url('https://raw.githubusercontent.com/google/fonts/main/ofl/notomusic/NotoMusic-Regular.ttf')
+            format('truetype');
+    }
+
+    .unicoda {
+        --staff-size: 4.8rem;
+        --staff-top: 2rem;
+        --top-line: calc(var(--staff-top) + 0.036rem);
+        --slot: 0.75rem;
+        --staff-step: calc(var(--staff-size) * 0.122);
+        --note-size: calc(var(--staff-step) * 4);
+        margin: 1.5rem 0;
+        color: inherit;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 0;
+        overflow-x: auto;
+    }
+
+    .unicoda > :is(figcaption, details) {
+        flex: 0 0 100%;
+    }
+
+    .unicoda details {
+        text-align: left;
+    }
+
+    .unicoda .measure {
+        --prefix: 0.75rem;
+        --width: calc(var(--prefix) + 16 * var(--slot));
+        --stretch: calc(var(--width) / var(--staff-size));
+        flex: 0 0 var(--width);
+        padding-bottom: 0.5rem;
+        position: relative;
+        break-inside: avoid;
+    }
+
+    .unicoda .measure:first-of-type {
+        --accidental-slot: 0.65rem;
+        --meter-space: 1.05rem;
+        --prefix: calc(1.8rem + (-2 - var(--column)) * var(--accidental-slot) + var(--meter-space));
+    }
+
+    .unicoda .measure > div {
+        height: 8rem;
+        interactivity: inert;
+        user-select: none;
+    }
+
+    .unicoda .measure > p {
+        height: 1.5rem;
+        margin: 0;
+        position: relative;
+        text-align: left;
+    }
+
+    .unicoda [data-pos] {
+        left: calc(var(--prefix) + (var(--column) - 1) * var(--slot));
+        position: absolute;
+        top: 0;
+    }
+
+    .unicoda .measure > p > span {
+        white-space: pre;
+    }
+
+    .unicoda .measure::before,
+    .unicoda .measure > div > [data-pos] {
+        font: var(--note-size) / 1 'Noto Music';
+    }
+
+    .unicoda .measure::before {
+        content: '\1d11a'; /* musical symbol five-line staff */
+        font-size: var(--staff-size);
+        left: calc(-0.05 * var(--staff-size) * var(--stretch));
+        position: absolute;
+        top: var(--staff-top);
+        transform: scaleX(var(--stretch));
+        transform-origin: left top;
+    }
+
+    .unicoda .measure > div > [data-pos] {
+        top: calc(var(--top-line) + var(--pitch) * var(--staff-step) - var(--anchor));
+    }
+
+    .unicoda .measure > div > [data-pos]:not([data-pos*='-']) {
+        --anchor: calc((0.5 + 0.373 * var(--stem-direction)) * 1em);
+        transform: scaleY(var(--stem-direction));
+    }
+
+    .unicoda .measure > div > :first-child[data-pos*='-'] {
+        --anchor: 0.873em;
+        left: 0.1rem;
+    }
+
+    .unicoda [data-pos*='-'] {
+        left: calc(
+            var(--prefix) - var(--meter-space) + (var(--column) + 1) * var(--accidental-slot)
+        );
+    }
+
+    .unicoda .measure > div > [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
+        --anchor: 0.8645em;
+        font-size: 1.5rem;
+    }
+
+    .unicoda .measure > div > [data-pos$='-1'] {
+        --column: -1;
+        font: bold 1.7rem/1.37 serif;
+        top: var(--staff-top);
+    }
+
+    .unicoda .measure > div > [data-pos='a-1'] {
+        top: calc(var(--staff-top) + 1lh);
+    }
+
+    .unicoda .measure:has(> div > :first-child[data-pos$='-9']),
+    .unicoda [data-pos$='-9'] {
+        --column: -9;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-8']),
+    .unicoda [data-pos$='-8'] {
+        --column: -8;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-7']),
+    .unicoda [data-pos$='-7'] {
+        --column: -7;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-6']),
+    .unicoda [data-pos$='-6'] {
+        --column: -6;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-5']),
+    .unicoda [data-pos$='-5'] {
+        --column: -5;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-4']),
+    .unicoda [data-pos$='-4'] {
+        --column: -4;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-3']),
+    .unicoda [data-pos$='-3'] {
+        --column: -3;
+    }
+    .unicoda .measure:has(> div > :first-child[data-pos$='-2']),
+    .unicoda [data-pos$='-2'] {
+        --column: -2;
+    }
+
+    .unicoda [data-pos$='01'] {
+        --column: 1;
+    }
+    .unicoda [data-pos$='02'] {
+        --column: 2;
+    }
+    .unicoda [data-pos$='03'] {
+        --column: 3;
+    }
+    .unicoda [data-pos$='04'] {
+        --column: 4;
+    }
+    .unicoda [data-pos$='05'] {
+        --column: 5;
+    }
+    .unicoda [data-pos$='06'] {
+        --column: 6;
+    }
+    .unicoda [data-pos$='07'] {
+        --column: 7;
+    }
+    .unicoda [data-pos$='08'] {
+        --column: 8;
+    }
+    .unicoda [data-pos$='09'] {
+        --column: 9;
+    }
+    .unicoda [data-pos$='10'] {
+        --column: 10;
+    }
+    .unicoda [data-pos$='11'] {
+        --column: 11;
+    }
+    .unicoda [data-pos$='12'] {
+        --column: 12;
+    }
+    .unicoda [data-pos$='13'] {
+        --column: 13;
+    }
+    .unicoda [data-pos$='14'] {
+        --column: 14;
+    }
+    .unicoda [data-pos$='15'] {
+        --column: 15;
+    }
+    .unicoda [data-pos$='16'] {
+        --column: 16;
+    }
+
+    .unicoda .measure > div > [data-pos^='g'] {
+        --pitch: -1;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='f'] {
+        --pitch: 0;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='e'] {
+        --pitch: 1;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='d'] {
+        --pitch: 2;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='c'] {
+        --pitch: 3;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='B'] {
+        --pitch: 4;
+        --stem-direction: -1;
+    }
+    .unicoda .measure > div > [data-pos^='A'] {
+        --pitch: 5;
+        --stem-direction: 1;
+    }
+    .unicoda .measure > div > [data-pos^='G'] {
+        --pitch: 6;
+        --stem-direction: 1;
+    }
+    .unicoda .measure > div > [data-pos^='F'] {
+        --pitch: 7;
+        --stem-direction: 1;
+    }
+    .unicoda .measure > div > [data-pos^='E'] {
+        --pitch: 8;
+        --stem-direction: 1;
+    }
+    .unicoda .measure > div > [data-pos^='D'] {
+        --pitch: 9;
+        --stem-direction: 1;
+    }
+</style>
+<figure class="unicoda">
+    <figcaption>Stepping up and stepping down</figcaption>
+    <div class="measure">
+        <div>
+            <span data-pos="G-3">𝄞</span>
+            <span data-pos="f-2">♯</span>
+            <span data-pos="c-1">4</span>
+            <span data-pos="a-1">4</span>
+            <span data-pos="G01">𝅘𝅥</span>
+            <span data-pos="A05">𝅘𝅥</span>
+            <span data-pos="B09">𝅘𝅥</span>
+            <span data-pos="c13">𝅘𝅥</span>
+        </div>
+        <p>
+            <span data-pos="A01">Step- </span><span data-pos="A05">ping </span
+            ><span data-pos="A09">up </span><span data-pos="A13">the </span>
+        </p>
+        <p>
+            <span data-pos="B01">One </span><span data-pos="B05">two </span
+            ><span data-pos="B09">three </span><span data-pos="B13">four </span>
+        </p>
+    </div>
+    <div class="measure">
+        <div>
+            <span data-pos="d01">𝅘𝅥</span>
+            <span data-pos="e05">𝅘𝅥</span>
+            <span data-pos="f09">𝅘𝅥</span>
+            <span data-pos="g13">𝅘𝅥</span>
+        </div>
+        <p>
+            <span data-pos="A01">scale </span><span data-pos="A05">we </span
+            ><span data-pos="A09">climb </span><span data-pos="A13">high </span>
+        </p>
+        <p>
+            <span data-pos="B01">five </span><span data-pos="B05">six </span
+            ><span data-pos="B09">seven </span><span data-pos="B13">eight </span>
+        </p>
+    </div>
+    <div class="measure">
+        <div>
+            <span data-pos="g01">𝅘𝅥</span>
+            <span data-pos="f05">𝅘𝅥</span>
+            <span data-pos="e09">𝅘𝅥</span>
+            <span data-pos="d13">𝅘𝅥</span>
+        </div>
+        <p>
+            <span data-pos="A01">Step- </span><span data-pos="A05">ping </span
+            ><span data-pos="A09">down </span><span data-pos="A13">the </span>
+        </p>
+        <p>
+            <span data-pos="B01">eight </span><span data-pos="B05">seven </span
+            ><span data-pos="B09">six </span><span data-pos="B13">five </span>
+        </p>
+    </div>
+    <div class="measure">
+        <div>
+            <span data-pos="c01">𝅘𝅥</span>
+            <span data-pos="B05">𝅘𝅥</span>
+            <span data-pos="A09">𝅘𝅥</span>
+            <span data-pos="G13">𝅘𝅥</span>
+        </div>
+        <p>
+            <span data-pos="A01">scale </span><span data-pos="A05">we </span
+            ><span data-pos="A09">come </span><span data-pos="A13">home </span>
+        </p>
+        <p>
+            <span data-pos="B01">four </span><span data-pos="B05">three </span
+            ><span data-pos="B09">two </span><span data-pos="B13">one </span>
+        </p>
+    </div>
+    <details>
+        <summary>ABC source</summary>
+        <pre>
+T:Stepping up and stepping down
+M:4/4
+L:1/4
+K:G
+G A B c | d e f g | g f e d | c B A G |]
+w: Step-ping up the | scale we climb high | Step-ping down the | scale we come home
+w: One two three four | five six seven eight | eight seven six five | four three two one
+</pre>
+    </details>
+</figure>

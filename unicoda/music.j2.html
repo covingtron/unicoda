@@ -1,0 +1,41 @@
+{# prettier-ignore-start #}
+<style>{% include 'music.j2.css' %}</style>
+{# prettier-ignore-end #}
+<figure class="unicoda">
+    <figcaption>{{ headers.get('T', 'Music') }}</figcaption>
+    {% for measure in measures %}
+        {% set positions = measure.notes | columns %}
+        <div class="measure">
+            <div>
+                {% if loop.first %}
+                    {# musical symbol g clef #}
+                    <span data-pos="G-{{ accidentals | length + 2 }}">𝄞</span>
+                    {% for pitch, glyph in accidentals %}
+                        <span data-pos="{{ pitch }}-{{ loop.revindex + 1 }}">{{ glyph }}</span>
+                    {% endfor %}
+                    <span data-pos="c-1">4</span>
+                    <span data-pos="a-1">4</span>
+                {% endif %}
+                {% for note in measure.notes %}
+                    <span data-pos="{{ note.pitch }}{{ '%02d' | format(positions[loop.index0]) }}"
+                        >{{ note.duration | glyph }}</span
+                    >
+                {% endfor %}
+            </div>
+            {% for row in measure.lyrics %}
+                {% set label = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[loop.index0] %}
+                <p>
+                    {%- for lyric in row -%}
+                        <span data-pos="{{ label }}{{ '%02d' | format(positions[loop.index0]) }}"
+                            >{{ lyric ~ ' ' -}}</span
+                        >
+                    {%- endfor %}
+                </p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <details>
+        <summary>ABC source</summary>
+        <pre>{{ source }}</pre>
+    </details>
+</figure>

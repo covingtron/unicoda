@@ -11,3 +11,6 @@ default_context:
     languages: Node,Python
     license: MPL-2.0
     publish_to_pypi: true
+    python_dependencies:
+        - jinja2
+        - markupsafe

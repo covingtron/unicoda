@@ -1,0 +1,135 @@
+@font-face {
+    font-family: 'Noto Music';
+    src: url('https://raw.githubusercontent.com/google/fonts/main/ofl/notomusic/NotoMusic-Regular.ttf')
+        format('truetype');
+}
+
+.unicoda {
+    --staff-size: 4.8rem;
+    --staff-top: 2rem;
+    --top-line: calc(var(--staff-top) + 0.036rem);
+    --slot: 0.75rem;
+    --staff-step: calc(var(--staff-size) * 0.122);
+    --note-size: calc(var(--staff-step) * 4);
+    margin: 1.5rem 0;
+    color: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0;
+    overflow-x: auto;
+}
+
+.unicoda > :is(figcaption, details) {
+    flex: 0 0 100%;
+}
+
+.unicoda details {
+    text-align: left;
+}
+
+.unicoda .measure {
+    --prefix: 0.75rem;
+    --width: calc(var(--prefix) + 16 * var(--slot));
+    --stretch: calc(var(--width) / var(--staff-size));
+    flex: 0 0 var(--width);
+    padding-bottom: 0.5rem;
+    position: relative;
+    break-inside: avoid;
+}
+
+.unicoda .measure:first-of-type {
+    --accidental-slot: 0.65rem;
+    --meter-space: 1.05rem;
+    --prefix: calc(1.8rem + (-2 - var(--column)) * var(--accidental-slot) + var(--meter-space));
+}
+
+.unicoda .measure > div {
+    height: 8rem;
+    interactivity: inert;
+    user-select: none;
+}
+
+.unicoda .measure > p {
+    height: 1.5rem;
+    margin: 0;
+    position: relative;
+    text-align: left;
+}
+
+.unicoda [data-pos] {
+    left: calc(var(--prefix) + (var(--column) - 1) * var(--slot));
+    position: absolute;
+    top: 0;
+}
+
+.unicoda .measure > p > span {
+    white-space: pre;
+}
+
+.unicoda .measure::before,
+.unicoda .measure > div > [data-pos] {
+    font: var(--note-size) / 1 'Noto Music';
+}
+
+.unicoda .measure::before {
+    content: '\1d11a'; /* musical symbol five-line staff */
+    font-size: var(--staff-size);
+    left: calc(-0.05 * var(--staff-size) * var(--stretch));
+    position: absolute;
+    top: var(--staff-top);
+    transform: scaleX(var(--stretch));
+    transform-origin: left top;
+}
+
+.unicoda .measure > div > [data-pos] {
+    top: calc(var(--top-line) + var(--pitch) * var(--staff-step) - var(--anchor));
+}
+
+.unicoda .measure > div > [data-pos]:not([data-pos*='-']) {
+    --anchor: calc((0.5 + 0.373 * var(--stem-direction)) * 1em);
+    transform: scaleY(var(--stem-direction));
+}
+
+.unicoda .measure > div > :first-child[data-pos*='-'] {
+    --anchor: 0.873em;
+    left: 0.1rem;
+}
+
+.unicoda [data-pos*='-'] {
+    left: calc(var(--prefix) - var(--meter-space) + (var(--column) + 1) * var(--accidental-slot));
+}
+
+.unicoda .measure > div > [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
+    --anchor: 0.8645em;
+    font-size: 1.5rem;
+}
+
+.unicoda .measure > div > [data-pos$='-1'] {
+    --column: -1;
+    font: bold 1.7rem/1.37 serif;
+    top: var(--staff-top);
+}
+
+.unicoda .measure > div > [data-pos='a-1'] {
+    top: calc(var(--staff-top) + 1lh);
+}
+
+{% for column in range(-9, -1) %}
+.unicoda .measure:has(> div > :first-child[data-pos$='{{ column }}']),
+.unicoda [data-pos$='{{ column }}'] {
+    --column: {{ column }};
+}
+{% endfor %}
+
+{% for column in range(1, 17) %}
+.unicoda [data-pos$='{{ '%02d' | format(column) }}'] {
+    --column: {{ column }};
+}
+{% endfor %}
+
+{% for pitch in 'gfedcBAGFED' %}
+.unicoda .measure > div > [data-pos^='{{ pitch }}'] {
+    --pitch: {{ loop.index0 - 1 }};
+    --stem-direction: {{ -1 if loop.index0 <= 5 else 1 }};
+}
+{% endfor %}
