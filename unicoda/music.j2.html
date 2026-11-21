@@ -1,0 +1,57 @@
+{# prettier-ignore-start #}
+<style>{% include 'music.j2.css' %}</style>
+{# prettier-ignore-end #}
+<figure class="unicoda-music">
+    <figcaption>{{ headers.get('T', 'Music') }}</figcaption>
+    <div class="score">
+        {% for measure in measures %}
+            {% set positions = measure.notes | columns %}
+            <div class="measure{{ ' final' if measure.final else '' }}">
+                <div class="staff-items" aria-hidden="true">
+                    {% if loop.first %}
+                        <span class="clef" data-pos="G01">𝄞</span>{# MUSICAL SYMBOL G CLEF #}
+                        <span class="meter" data-pos="c03">4</span>
+                        <span class="meter" data-pos="a03">4</span>
+                        {% if headers['K'] == 'G' %}
+                            <span class="key" data-pos="f02">♯</span>{# MUSIC SHARP SIGN #}
+                        {% endif %}
+                    {% endif %}
+                    {% for note in measure.notes %}
+                        <span
+                            class="event"
+                            data-pos="{{ note.pitch }}{{ '%02d' | format(positions[loop.index0]) }}"
+                        >
+                            {% if note.chord %}
+                                <span class="chord">{{ note.chord }}</span>
+                            {% endif %}
+                            <span class="note" data-duration="{{ note.duration }}"
+                                >{{ note.duration | glyph }}</span
+                            >
+                            {% if note.duration == 3 / 8 %}
+                                <span class="dot">·</span>{# MIDDLE DOT #}
+                            {% endif %}
+                        </span>
+                    {% endfor %}
+                </div>
+                {% for row in measure.lyrics %}
+                    {% set label = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[loop.index0] %}
+                    <div class="lyrics">
+                        {%- for lyric in row -%}
+                            <span
+                                data-pos="{{ label }}{{ '%02d' | format(positions[loop.index0]) }}"
+                                >{{ lyric ~ ' ' -}}</span
+                            >
+                        {%- endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <details>
+        <summary>Lyrics and ABC source</summary>
+        {% for verse in verses %}
+            <p>{{- verse | select | map('join', ' ') | join(' ') -}}</p>
+        {% endfor %}
+        <pre>{{ source }}</pre>
+    </details>
+</figure>

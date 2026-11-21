@@ -1,1 +1,2 @@
 include pypi_compatible_build.py
+recursive-include unicoda *.css *.html

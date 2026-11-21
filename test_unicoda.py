@@ -54,10 +54,15 @@ def test_lyric_bar_skips():
 
 
 def test_chords():
-    source = 'M:4/4\nL:1/4\nK:C\n"<&>" D E F G |]\nw: one two three <&>'
+    source = (
+        'T:<script>alert(1)</script>\nM:4/4\nL:1/4\nK:C\n"<&>" D E F G |]\nw: one two three <&>'
+    )
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
     assert [span.text for span in root.findall('.//span[@class="chord"]')] == ['<&>']
     assert root.findall('.//div[@class="lyrics"]/span')[-1].text == '<&> '
+    assert root.findtext('.//figcaption') == '<script>alert(1)</script>'
+    assert root.findtext('.//pre') == source
+    assert not root.findall('.//script')
 
 
 def test_coordinates():
@@ -78,13 +83,24 @@ def test_coordinates():
         'a03',
     ]
     assert 'style="left:' not in html
-    assert 'style="--pitch:' not in html
+    assert not root.findall('.//*[@style]')
+    assert [span.text for span in root.findall('.//span[@class="note"]')] == [
+        '\U0001d160',
+        '\U0001d160',
+        '\U0001d15f',
+        '\U0001d160',
+        '\U0001d15f',
+        '\U0001d15e',
+        '\U0001d15e',
+    ]
+    assert len(root.findall('.//span[@class="dot"]')) == 1
 
 
 def test_lyric_rows():
     source = scale + (
         '\nw: Step-ping up _ | then~we * come down\nw: One two three four | five six _ *'
     )
+    source = source.replace('|]', '|') + '\nD E F G |]'
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
     rows = root.findall('.//div[@class="lyrics"]')
     assert [[span.attrib['data-pos'] for span in row] for row in rows] == [
@@ -100,6 +116,10 @@ def test_lyric_rows():
         ['five', 'six', '_', ''],
     ]
     assert ''.join(rows[1].itertext()).strip() == 'One two three four'
+    assert [paragraph.text for paragraph in root.findall('.//details/p')] == [
+        'Step- ping up _ then we  come down',
+        'One two three four five six _ ',
+    ]
     assert all(
         not staff.findall('.//div[@class="lyrics"]')
         for staff in root.findall('.//div[@class="staff-items"]')

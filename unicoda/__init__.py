@@ -2,31 +2,11 @@
 
 from dataclasses import dataclass, field
 from fractions import Fraction
-from importlib.resources import files
 from itertools import accumulate, zip_longest
 from re import finditer, fullmatch, match
 
-from markupsafe import Markup, escape
-
-slots_per_measure = 16
-staff_size_rem = 4.8
-stylesheet = (
-    files(__package__)
-    .joinpath('music.css')
-    .read_text()
-    .replace('SLOTS_PER_MEASURE', str(slots_per_measure))
-    .replace('STAFF_SIZE_REM', str(staff_size_rem))
-    + ''.join(
-        '.unicoda-music [data-pos$="%02d"] { --column: %d; }' % (column, column - 4)
-        for column in range(4, 4 + slots_per_measure)
-    )
-    + ''.join(
-        '.unicoda-music .staff-items [data-pos^="%s"] '
-        '{ --pitch: %d; --turn: %ddeg; --head-center: %s; }'
-        % (pitch, index - 1, 180 if index <= 5 else 0, 0.127 if index <= 5 else 0.873)
-        for index, pitch in enumerate('gfedcBAGFED')
-    )
-)
+from jinja2 import Environment, PackageLoader
+from markupsafe import Markup
 
 
 @dataclass
@@ -140,83 +120,35 @@ def parse_abc(source: str) -> tuple[dict[str, str], list[Measure]]:  # noqa: C90
     return headers, measures
 
 
-def render_measure(measure: Measure, key: str, *, first: bool) -> str:
-    """Place glyphs on a measured Noto Music staff, with duration and lyric spacing."""
-    slot_width_rem = max(
-        max(
-            0.75,
-            (max((len(row[index]) for row in measure.lyrics), default=0) * 0.55 + 0.75)
-            / (note.duration * slots_per_measure),
-        )
-        for index, note in enumerate(measure.notes)
-    )
-    prefix_width_rem = 3.5 if first else 0.75
-    width_rem = slot_width_rem * slots_per_measure + prefix_width_rem
-    columns = list(
-        accumulate([4, *(int(note.duration * slots_per_measure) for note in measure.notes)])
-    )
-    items = (
-        [
-            '<span class="clef" data-pos="G01">\U0001d11e</span>',  # MUSICAL SYMBOL G CLEF
-            '<span class="meter" data-pos="c03">4</span>',
-            '<span class="meter" data-pos="a03">4</span>',
-        ]
-        if first
-        else []
-    )
-    if first and key == 'G':
-        items.append('<span class="key" data-pos="f02">\u266f</span>')  # MUSIC SHARP SIGN
-    for note, column in zip(measure.notes, columns[:-1], strict=True):
-        glyph = {
-            Fraction(1, 8): '\U0001d160',  # MUSICAL SYMBOL EIGHTH NOTE
-            Fraction(1, 2): '\U0001d15e',  # MUSICAL SYMBOL HALF NOTE
-        }.get(note.duration, '\U0001d15f')  # MUSICAL SYMBOL QUARTER NOTE
-        items.append(
-            f'<span class="event" data-pos="{note.pitch}{column:02}">'
-            + (f'<span class="chord">{escape(note.chord)}</span>' if note.chord else '')
-            + f'<span class="note" data-duration="{note.duration}">{glyph}</span>'
-            + (
-                '<span class="dot">\u00b7</span>'  # MIDDLE DOT
-                if note.duration == Fraction(3, 8)
-                else ''
-            )
-            + '</span>'
-        )
-    lyrics = ''.join(
-        '<div class="lyrics">'
-        + ''.join(
-            f'<span data-pos="{chr(65 + index)}{column:02}">{escape(lyric)} </span>'
-            for lyric, column in zip(row, columns[:-1], strict=True)
-        )
-        + '</div>'
-        for index, row in enumerate(measure.lyrics)
-    )
-    final = ' final' if measure.final else ''
-    return (
-        f'<div class="measure{final}" style="--stretch:{width_rem / staff_size_rem:.5f};'
-        f'--slot:{slot_width_rem:.3f}rem;'
-        f'--prefix:{prefix_width_rem}rem"><div class="staff-items" aria-hidden="true">'
-        f'{"".join(items)}</div>{lyrics}</div>'
-    )
+def columns(notes: list[Note]) -> list[int]:
+    """Return the starting column of each note on the sixteenth-note grid."""
+    return list(accumulate((int(note.duration * 16) for note in notes), initial=4))[:-1]
+
+
+def glyph(duration: Fraction) -> str:
+    """Choose the Unicode note glyph; dotted quarters use a separate dot."""
+    return {
+        Fraction(1, 8): '\U0001d160',  # MUSICAL SYMBOL EIGHTH NOTE
+        Fraction(1, 2): '\U0001d15e',  # MUSICAL SYMBOL HALF NOTE
+    }.get(duration, '\U0001d15f')  # MUSICAL SYMBOL QUARTER NOTE
+
+
+environment = Environment(
+    autoescape=True, loader=PackageLoader(__name__, '.'), lstrip_blocks=True, trim_blocks=True
+)
+environment.filters.update(columns=columns, glyph=glyph)  # pyright: ignore[reportArgumentType]
 
 
 def render_abc(source: str) -> Markup:
     """Return HTML and CSS that load Noto Music from a URL; usable as a Jinja filter."""
     headers, measures = parse_abc(source)
-    title = escape(headers.get('T', 'Music'))
-    lyrics = ''.join(
-        f'<p>{escape(" ".join(lyric for row in verse for lyric in row))}</p>'
-        for verse in zip_longest(*(measure.lyrics for measure in measures), fillvalue=())
-    )
-    return Markup(  # noqa: S704 escaped text surrounds only generated markup
-        f'<style>{stylesheet}</style><figure class="unicoda-music">'
-        f'<figcaption>{title}</figcaption><div class="score">'
-        + ''.join(
-            render_measure(measure, headers['K'], first=index == 0)
-            for index, measure in enumerate(measures)
+    return Markup(  # noqa: S704 Jinja autoescapes user input
+        environment.get_template('music.j2.html').render(
+            headers=headers,
+            measures=measures,
+            source=source,
+            verses=zip_longest(*(measure.lyrics for measure in measures), fillvalue=()),
         )
-        + f'</div><details><summary>Lyrics and ABC source</summary>{lyrics}'
-        f'<pre>{escape(source)}</pre></details></figure>'
     )
 
 

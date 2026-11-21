@@ -5,7 +5,8 @@
 }
 
 .unicoda-music {
-    --staff-size: STAFF_SIZE_REMrem;
+    --staff-size: 4.8rem;
+    --slot: 0.75rem;
     --staff-step: calc(var(--staff-size) * 0.122);
     --note-size: calc(var(--staff-step) * 4);
     margin: 1.5rem 0;
@@ -25,11 +26,17 @@
 }
 
 .unicoda-music .measure {
-    --width: calc(var(--prefix) + SLOTS_PER_MEASURE * var(--slot));
+    --prefix: 0.75rem;
+    --width: calc(var(--prefix) + 16 * var(--slot));
+    --stretch: calc(var(--width) / var(--staff-size));
     flex: 0 0 var(--width);
     padding-bottom: 0.5rem;
     position: relative;
     break-inside: avoid;
+}
+
+.unicoda-music .measure:first-child {
+    --prefix: 3.5rem;
 }
 
 .unicoda-music .staff-items {
@@ -121,3 +128,17 @@
 .unicoda-music .meter[data-pos^='a'] {
     top: calc(2rem + 1.7rem * 1.37);
 }
+
+{% for column in range(4, 20) %}
+.unicoda-music [data-pos$='{{ '%02d' | format(column) }}'] {
+    --column: {{ column - 4 }};
+}
+{% endfor %}
+
+{% for pitch in 'gfedcBAGFED' %}
+.unicoda-music .staff-items [data-pos^='{{ pitch }}'] {
+    --pitch: {{ loop.index0 - 1 }};
+    --turn: {{ 180 if loop.index0 <= 5 else 0 }}deg;
+    --head-center: {{ 0.127 if loop.index0 <= 5 else 0.873 }};
+}
+{% endfor %}
