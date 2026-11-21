@@ -12,6 +12,7 @@ Open the HTML in a browser to review the score. Regenerate it with `mise render-
 
 ## To do
 
-- [ ] Evaluate how screen readers and other assistive tools can convey pitch, rhythm, and lyrics.
-  Test candidate approaches with those tools, then update the score markup, ARIA attributes, and
-  rendering to match the chosen approach.
+- [ ] Figure out the best way to convey pitch, rhythm, and lyrics to people using screen readers
+  or other assistive tools. This may involve asking people who use these tools or have experience
+  with accessible music notation. Then update the score markup, ARIA attributes, and rendering
+  accordingly.
