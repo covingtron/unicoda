@@ -39,9 +39,7 @@
     .unicoda-music .measure:first-of-type {
         --accidental-slot: 0.65rem;
         --meter-space: 1.05rem;
-        --prefix: calc(
-            1.8rem + (var(--opening-column) - 2) * var(--accidental-slot) + var(--meter-space)
-        );
+        --prefix: calc(1.8rem + (-2 - var(--column)) * var(--accidental-slot) + var(--meter-space));
     }
 
     .unicoda-music .staff-items {
@@ -57,7 +55,7 @@
     }
 
     .unicoda-music [data-pos] {
-        left: calc(var(--prefix) + var(--column) * var(--slot));
+        left: calc(var(--prefix) + (var(--column) - 1) * var(--slot));
         position: absolute;
         top: 0;
     }
@@ -105,18 +103,20 @@
         top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
     }
 
+    .unicoda-music [data-pos*='-'] {
+        left: calc(
+            var(--prefix) - var(--meter-space) + (var(--column) + 1) * var(--accidental-slot)
+        );
+    }
+
     .unicoda-music [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
         font-size: 1.5rem;
-        left: calc(
-            var(--prefix) - var(--meter-space) - (var(--opening-column) - 1) *
-                var(--accidental-slot)
-        );
         top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
     }
 
     .unicoda-music .staff-items > [data-pos$='-1'] {
+        --column: -1;
         font: bold 1.7rem/1.37 serif;
-        left: calc(var(--prefix) - var(--meter-space));
         top: 2rem;
     }
 
@@ -124,86 +124,86 @@
         top: calc(2rem + 1.7rem * 1.37);
     }
 
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-2']),
-    .unicoda-music [data-pos$='-2'] {
-        --opening-column: 2;
-    }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-3']),
-    .unicoda-music [data-pos$='-3'] {
-        --opening-column: 3;
-    }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-4']),
-    .unicoda-music [data-pos$='-4'] {
-        --opening-column: 4;
-    }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-5']),
-    .unicoda-music [data-pos$='-5'] {
-        --opening-column: 5;
-    }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-6']),
-    .unicoda-music [data-pos$='-6'] {
-        --opening-column: 6;
-    }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-7']),
-    .unicoda-music [data-pos$='-7'] {
-        --opening-column: 7;
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-9']),
+    .unicoda-music [data-pos$='-9'] {
+        --column: -9;
     }
     .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-8']),
     .unicoda-music [data-pos$='-8'] {
-        --opening-column: 8;
+        --column: -8;
     }
-    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-9']),
-    .unicoda-music [data-pos$='-9'] {
-        --opening-column: 9;
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-7']),
+    .unicoda-music [data-pos$='-7'] {
+        --column: -7;
+    }
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-6']),
+    .unicoda-music [data-pos$='-6'] {
+        --column: -6;
+    }
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-5']),
+    .unicoda-music [data-pos$='-5'] {
+        --column: -5;
+    }
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-4']),
+    .unicoda-music [data-pos$='-4'] {
+        --column: -4;
+    }
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-3']),
+    .unicoda-music [data-pos$='-3'] {
+        --column: -3;
+    }
+    .unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-2']),
+    .unicoda-music [data-pos$='-2'] {
+        --column: -2;
     }
 
     .unicoda-music [data-pos$='01'] {
-        --column: 0;
-    }
-    .unicoda-music [data-pos$='02'] {
         --column: 1;
     }
-    .unicoda-music [data-pos$='03'] {
+    .unicoda-music [data-pos$='02'] {
         --column: 2;
     }
-    .unicoda-music [data-pos$='04'] {
+    .unicoda-music [data-pos$='03'] {
         --column: 3;
     }
-    .unicoda-music [data-pos$='05'] {
+    .unicoda-music [data-pos$='04'] {
         --column: 4;
     }
-    .unicoda-music [data-pos$='06'] {
+    .unicoda-music [data-pos$='05'] {
         --column: 5;
     }
-    .unicoda-music [data-pos$='07'] {
+    .unicoda-music [data-pos$='06'] {
         --column: 6;
     }
-    .unicoda-music [data-pos$='08'] {
+    .unicoda-music [data-pos$='07'] {
         --column: 7;
     }
-    .unicoda-music [data-pos$='09'] {
+    .unicoda-music [data-pos$='08'] {
         --column: 8;
     }
-    .unicoda-music [data-pos$='10'] {
+    .unicoda-music [data-pos$='09'] {
         --column: 9;
     }
-    .unicoda-music [data-pos$='11'] {
+    .unicoda-music [data-pos$='10'] {
         --column: 10;
     }
-    .unicoda-music [data-pos$='12'] {
+    .unicoda-music [data-pos$='11'] {
         --column: 11;
     }
-    .unicoda-music [data-pos$='13'] {
+    .unicoda-music [data-pos$='12'] {
         --column: 12;
     }
-    .unicoda-music [data-pos$='14'] {
+    .unicoda-music [data-pos$='13'] {
         --column: 13;
     }
-    .unicoda-music [data-pos$='15'] {
+    .unicoda-music [data-pos$='14'] {
         --column: 14;
     }
-    .unicoda-music [data-pos$='16'] {
+    .unicoda-music [data-pos$='15'] {
         --column: 15;
+    }
+    .unicoda-music [data-pos$='16'] {
+        --column: 16;
     }
 
     .unicoda-music .staff-items [data-pos^='g'] {
