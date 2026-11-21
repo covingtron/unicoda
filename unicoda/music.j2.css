@@ -4,7 +4,7 @@
         format('truetype');
 }
 
-.unicoda-music {
+.unicoda {
     --staff-size: 4.8rem;
     --slot: 0.75rem;
     --staff-step: calc(var(--staff-size) * 0.122);
@@ -17,15 +17,15 @@
     overflow-x: auto;
 }
 
-.unicoda-music > :is(figcaption, details) {
+.unicoda > :is(figcaption, details) {
     flex: 0 0 100%;
 }
 
-.unicoda-music details {
+.unicoda details {
     text-align: left;
 }
 
-.unicoda-music .measure {
+.unicoda .measure {
     --prefix: 0.75rem;
     --width: calc(var(--prefix) + 16 * var(--slot));
     --stretch: calc(var(--width) / var(--staff-size));
@@ -35,40 +35,41 @@
     break-inside: avoid;
 }
 
-.unicoda-music .measure:first-of-type {
+.unicoda .measure:first-of-type {
     --accidental-slot: 0.65rem;
     --meter-space: 1.05rem;
     --prefix: calc(1.8rem + (-2 - var(--column)) * var(--accidental-slot) + var(--meter-space));
 }
 
-.unicoda-music .staff-items {
+.unicoda .measure > div {
     height: 8rem;
     interactivity: inert;
     user-select: none;
 }
 
-.unicoda-music .lyrics {
+.unicoda .measure > p {
     height: 1.5rem;
+    margin: 0;
     position: relative;
     text-align: left;
 }
 
-.unicoda-music [data-pos] {
+.unicoda [data-pos] {
     left: calc(var(--prefix) + (var(--column) - 1) * var(--slot));
     position: absolute;
     top: 0;
 }
 
-.unicoda-music .lyrics > span {
+.unicoda .measure > p > span {
     white-space: pre;
 }
 
-.unicoda-music .measure::before,
-.unicoda-music .staff-items > [data-pos] {
+.unicoda .measure::before,
+.unicoda .measure > div > [data-pos] {
     font: var(--note-size) / 1 'Noto Music';
 }
 
-.unicoda-music .measure::before {
+.unicoda .measure::before {
     content: '\1d11a'; /* musical symbol five-line staff */
     font-size: var(--staff-size);
     left: calc(-0.05 * var(--staff-size) * var(--stretch));
@@ -78,7 +79,7 @@
     transform-origin: left top;
 }
 
-.unicoda-music .measure::after {
+.unicoda .measure::after {
     border-right: 1px solid;
     content: '';
     height: calc(var(--staff-step) * 8);
@@ -87,53 +88,53 @@
     top: 2.036rem;
 }
 
-.unicoda-music .final::after {
+.unicoda .final::after {
     border-right: 4px double;
 }
-.unicoda-music .staff-items > [data-pos]:not([data-pos*='-']) {
+.unicoda .measure > div > [data-pos]:not([data-pos*='-']) {
     top: calc(2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center));
     transform: scaleY(var(--stem-direction));
 }
 
-.unicoda-music .staff-items > :first-child[data-pos*='-'] {
+.unicoda .measure > div > :first-child[data-pos*='-'] {
     left: 0.1rem;
     top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
 }
 
-.unicoda-music [data-pos*='-'] {
+.unicoda [data-pos*='-'] {
     left: calc(var(--prefix) - var(--meter-space) + (var(--column) + 1) * var(--accidental-slot));
 }
 
-.unicoda-music [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
+.unicoda [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
     font-size: 1.5rem;
     top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
 }
 
-.unicoda-music .staff-items > [data-pos$='-1'] {
+.unicoda .measure > div > [data-pos$='-1'] {
     --column: -1;
     font: bold 1.7rem/1.37 serif;
     top: 2rem;
 }
 
-.unicoda-music .staff-items > [data-pos='a-1'] {
+.unicoda .measure > div > [data-pos='a-1'] {
     top: calc(2rem + 1.7rem * 1.37);
 }
 
 {% for column in range(-9, -1) %}
-.unicoda-music .measure:has(.staff-items > :first-child[data-pos$='{{ column }}']),
-.unicoda-music [data-pos$='{{ column }}'] {
+.unicoda .measure:has(> div > :first-child[data-pos$='{{ column }}']),
+.unicoda [data-pos$='{{ column }}'] {
     --column: {{ column }};
 }
 {% endfor %}
 
 {% for column in range(1, 17) %}
-.unicoda-music [data-pos$='{{ '%02d' | format(column) }}'] {
+.unicoda [data-pos$='{{ '%02d' | format(column) }}'] {
     --column: {{ column }};
 }
 {% endfor %}
 
 {% for pitch in 'gfedcBAGFED' %}
-.unicoda-music .staff-items [data-pos^='{{ pitch }}'] {
+.unicoda .measure > div > [data-pos^='{{ pitch }}'] {
     --pitch: {{ loop.index0 - 1 }};
     --stem-direction: {{ -1 if loop.index0 <= 5 else 1 }};
     --head-center: {{ 0.127 if loop.index0 <= 5 else 0.873 }};

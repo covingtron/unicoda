@@ -47,7 +47,7 @@ def test_lyric_bar_skips():
 def test_escape_html():
     source = 'T:<script>alert(1)</script>\nM:4/4\nL:1/4\nK:C\nD E F G |]\nw: one two three <&>'
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
-    assert root.findall('.//div[@class="lyrics"]/span')[-1].text == '<&> '
+    assert root.findall('.//figure/div/p/span')[-1].text == '<&> '
     assert root.findtext('.//figcaption') == '<script>alert(1)</script>'
     assert root.findtext('.//pre') == source
     assert not root.findall('.//script')
@@ -57,7 +57,7 @@ def test_escape_html():
 def test_coordinates(key: str, opening_positions: list[str]):
     html = str(render_abc(f'M:4/4\nL:1/4\nK:{key}\nD/ E/ F3/2 G/ A | B2 c2 |]'))
     root = fromstring(f'<main>{html}</main>')  # noqa: S314 generated from fixture
-    spans = root.findall('.//figure/div/div[@class="staff-items"]/span')
+    spans = root.findall('.//figure[@class="unicoda"]/div/div/span')
     notes = [span for span in spans if '-' not in span.attrib['data-pos']]
     assert [span.attrib['data-pos'] for span in notes] == [
         'D01',
@@ -93,7 +93,7 @@ def test_lyric_rows():
     )
     source = source.replace('|]', '|') + '\nD E F G |]'
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
-    rows = root.findall('.//div[@class="lyrics"]')
+    rows = root.findall('.//figure/div/p')
     assert [[span.attrib['data-pos'] for span in row] for row in rows] == [
         ['A01', 'A05', 'A09', 'A13'],
         ['B01', 'B05', 'B09', 'B13'],
@@ -111,10 +111,6 @@ def test_lyric_rows():
         ('summary', 'ABC source'),
         ('pre', source),
     ]
-    assert all(
-        not staff.findall('.//div[@class="lyrics"]')
-        for staff in root.findall('.//div[@class="staff-items"]')
-    )
 
 
 @mark.parametrize(

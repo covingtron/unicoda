@@ -29,7 +29,7 @@ def test_scale():
     assert ''.join(note.pitch for measure in measures for note in measure.notes) == (
         'GABcdefggfedcBAG'
     )
-    assert expected.count('class="lyrics"') == 8
+    assert expected.count('<p>') == 8
     assert expected.count('data-pos="f-2"') == 1
     assert 'data-pos="f-2"' not in render_abc(source.replace('K:G', 'K:C'))
 

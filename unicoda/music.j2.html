@@ -1,12 +1,12 @@
 {# prettier-ignore-start #}
 <style>{% include 'music.j2.css' %}</style>
 {# prettier-ignore-end #}
-<figure class="unicoda-music">
+<figure class="unicoda">
     <figcaption>{{ headers.get('T', 'Music') }}</figcaption>
     {% for measure in measures %}
         {% set positions = measure.notes | columns %}
         <div class="measure{{ ' final' if measure.final else '' }}">
-            <div class="staff-items">
+            <div>
                 {% if loop.first %}
                     {# musical symbol g clef #}
                     <span data-pos="G-{{ accidentals | length + 2 }}">𝄞</span>
@@ -24,13 +24,13 @@
             </div>
             {% for row in measure.lyrics %}
                 {% set label = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[loop.index0] %}
-                <div class="lyrics">
+                <p>
                     {%- for lyric in row -%}
                         <span data-pos="{{ label }}{{ '%02d' | format(positions[loop.index0]) }}"
                             >{{ lyric ~ ' ' -}}</span
                         >
                     {%- endfor %}
-                </div>
+                </p>
             {% endfor %}
         </div>
     {% endfor %}
