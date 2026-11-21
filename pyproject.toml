@@ -25,7 +25,7 @@ dynamic = ['version']
 dependencies = [
     
     'jinja2',
-
+    
     'markupsafe',
     
 ]
