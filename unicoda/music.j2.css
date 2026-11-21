@@ -43,6 +43,7 @@
 
 .unicoda-music .staff-items {
     height: 8rem;
+    interactivity: inert;
     user-select: none;
 }
 

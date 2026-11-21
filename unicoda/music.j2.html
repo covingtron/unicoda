@@ -6,7 +6,7 @@
     {% for measure in measures %}
         {% set positions = measure.notes | columns %}
         <div class="measure{{ ' final' if measure.final else '' }}">
-            <div class="staff-items" aria-hidden="true">
+            <div class="staff-items">
                 {% if loop.first %}
                     <span data-pos="G-{{ accidentals | length + 2 }}">𝄞</span
                     >{# musical symbol g clef #}
