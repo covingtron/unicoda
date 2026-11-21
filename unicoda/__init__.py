@@ -128,9 +128,9 @@ def columns(notes: list[Note]) -> list[int]:
 def glyph(duration: Fraction) -> str:
     """Choose the Unicode note glyph; dotted quarters use a separate dot."""
     return {
-        Fraction(1, 8): '\U0001d160',  # MUSICAL SYMBOL EIGHTH NOTE
-        Fraction(1, 2): '\U0001d15e',  # MUSICAL SYMBOL HALF NOTE
-    }.get(duration, '\U0001d15f')  # MUSICAL SYMBOL QUARTER NOTE
+        Fraction(1, 8): '\U0001d160',  # musical symbol eighth note
+        Fraction(1, 2): '\U0001d15e',  # musical symbol half note
+    }.get(duration, '\U0001d15f')  # musical symbol quarter note
 
 
 environment = Environment(

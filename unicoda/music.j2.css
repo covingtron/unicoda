@@ -66,7 +66,7 @@
 }
 
 .unicoda-music .measure::before {
-    content: '\1d11a'; /* MUSICAL SYMBOL FIVE-LINE STAFF */
+    content: '\1d11a'; /* musical symbol five-line staff */
     font-size: var(--staff-size);
     left: calc(-0.05 * var(--staff-size) * var(--stretch));
     position: absolute;
