@@ -30,8 +30,8 @@ def test_scale():
         'GABcdefggfedcBAG'
     )
     assert expected.count('class="lyrics"') == 8
-    assert expected.count('class="key"') == 1
-    assert render_abc(source.replace('K:G', 'K:C')).count('class="key"') == 0
+    assert expected.count('data-pos="f-2"') == 1
+    assert 'data-pos="f-2"' not in render_abc(source.replace('K:G', 'K:C'))
 
 
 if __name__ == '__main__':

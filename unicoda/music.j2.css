@@ -11,18 +11,18 @@
     --note-size: calc(var(--staff-step) * 4);
     margin: 1.5rem 0;
     color: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0;
+    overflow-x: auto;
+}
+
+.unicoda-music > :is(figcaption, details) {
+    flex: 0 0 100%;
 }
 
 .unicoda-music details {
     text-align: left;
-}
-
-.unicoda-music .score {
-    display: flex;
-    flex-wrap: wrap;
-    overflow-x: auto;
-    padding: 0.5rem 0;
-    gap: 0.5rem 0;
 }
 
 .unicoda-music .measure {
@@ -35,7 +35,7 @@
     break-inside: avoid;
 }
 
-.unicoda-music .measure:first-child {
+.unicoda-music .measure:first-of-type {
     --accidental-slot: 0.65rem;
     --meter-space: 1.05rem;
     --prefix: calc(1.8rem + (var(--opening-column) - 2) * var(--accidental-slot) + var(--meter-space));
@@ -55,15 +55,15 @@
 .unicoda-music [data-pos] {
     left: calc(var(--prefix) + var(--column) * var(--slot));
     position: absolute;
+    top: 0;
 }
 
 .unicoda-music .lyrics > span {
-    top: 0;
     white-space: pre;
 }
 
 .unicoda-music .measure::before,
-.unicoda-music :is(.clef, .key, .note) {
+.unicoda-music .staff-items > [data-pos] {
     font: var(--note-size) / 1 'Noto Music';
 }
 
@@ -89,33 +89,17 @@
 .unicoda-music .final::after {
     border-right: 4px double;
 }
-.unicoda-music .event {
-    top: 0;
-}
-.unicoda-music .chord {
-    position: absolute;
-    top: 0;
-    font-weight: bold;
-}
-.unicoda-music .note {
-    position: absolute;
-    left: 0;
+.unicoda-music .staff-items > [data-pos]:not([data-pos*='-']) {
     top: calc(2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center));
-    transform: rotate(var(--turn));
+    transform: scaleY(var(--stem-direction));
 }
 
-.unicoda-music .dot {
-    position: absolute;
-    left: 0.9rem;
-    top: calc(2.036rem + var(--pitch) * var(--staff-step) - 0.6rem);
-}
-
-.unicoda-music .clef {
+.unicoda-music .staff-items > :first-child[data-pos*='-'] {
     left: 0.1rem;
     top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
 }
 
-.unicoda-music .key {
+.unicoda-music [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
     font-size: 1.5rem;
     left: calc(
         var(--prefix) - var(--meter-space) - (var(--opening-column) - 1) * var(--accidental-slot)
@@ -123,19 +107,19 @@
     top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
 }
 
-.unicoda-music .meter {
+.unicoda-music .staff-items > [data-pos$='-1'] {
     font: bold 1.7rem/1.37 serif;
     left: calc(var(--prefix) - var(--meter-space));
     top: 2rem;
 }
 
-.unicoda-music .meter[data-pos^='a'] {
+.unicoda-music .staff-items > [data-pos='a-1'] {
     top: calc(2rem + 1.7rem * 1.37);
 }
 
 {% for column in range(2, 10) %}
-.unicoda-music .measure:has(.clef[data-pos$='-{{ column }}']),
-.unicoda-music .key[data-pos$='-{{ column }}'] {
+.unicoda-music .measure:has(.staff-items > :first-child[data-pos$='-{{ column }}']),
+.unicoda-music [data-pos$='-{{ column }}'] {
     --opening-column: {{ column }};
 }
 {% endfor %}
@@ -149,7 +133,7 @@
 {% for pitch in 'gfedcBAGFED' %}
 .unicoda-music .staff-items [data-pos^='{{ pitch }}'] {
     --pitch: {{ loop.index0 - 1 }};
-    --turn: {{ 180 if loop.index0 <= 5 else 0 }}deg;
+    --stem-direction: {{ -1 if loop.index0 <= 5 else 1 }};
     --head-center: {{ 0.127 if loop.index0 <= 5 else 0.873 }};
 }
 {% endfor %}

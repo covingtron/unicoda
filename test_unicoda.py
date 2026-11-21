@@ -44,25 +44,22 @@ def test_lyric_bar_skips():
     assert measures[1].lyrics == [['then', 'we', 'come', 'down'], ['last', '', '', '']]
 
 
-def test_chords():
-    source = (
-        'T:<script>alert(1)</script>\nM:4/4\nL:1/4\nK:C\n"<&>" D E F G |]\nw: one two three <&>'
-    )
+def test_escape_html():
+    source = 'T:<script>alert(1)</script>\nM:4/4\nL:1/4\nK:C\nD E F G |]\nw: one two three <&>'
     root = fromstring(f'<main>{render_abc(source)}</main>')  # noqa: S314 generated from fixture
-    assert [span.text for span in root.findall('.//span[@class="chord"]')] == ['<&>']
     assert root.findall('.//div[@class="lyrics"]/span')[-1].text == '<&> '
     assert root.findtext('.//figcaption') == '<script>alert(1)</script>'
     assert root.findtext('.//pre') == source
     assert not root.findall('.//script')
 
 
-@mark.parametrize(
-    ('key', 'clef_position', 'key_positions'), (('C', 'G-2', []), ('G', 'G-3', ['f-2']))
-)
-def test_coordinates(key: str, clef_position: str, key_positions: list[str]):
+@mark.parametrize(('key', 'opening_positions'), (('C', ['G-2']), ('G', ['G-3', 'f-2'])))
+def test_coordinates(key: str, opening_positions: list[str]):
     html = str(render_abc(f'M:4/4\nL:1/4\nK:{key}\nD/ E/ F3/2 G/ A | B2 c2 |]'))
     root = fromstring(f'<main>{html}</main>')  # noqa: S314 generated from fixture
-    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="event"]')] == [
+    spans = root.findall('.//figure/div/div[@class="staff-items"]/span')
+    notes = [span for span in spans if '-' not in span.attrib['data-pos']]
+    assert [span.attrib['data-pos'] for span in notes] == [
         'D01',
         'E03',
         'F05',
@@ -71,28 +68,23 @@ def test_coordinates(key: str, clef_position: str, key_positions: list[str]):
         'B01',
         'c09',
     ]
-    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="clef"]')] == [
-        clef_position
-    ]
-    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="key"]')] == (
-        key_positions
-    )
-    assert [span.attrib['data-pos'] for span in root.findall('.//span[@class="meter"]')] == [
+    assert [span.attrib['data-pos'] for span in spans if '-' in span.attrib['data-pos']] == [
+        *opening_positions,
         'c-1',
         'a-1',
     ]
     assert 'style="left:' not in html
     assert not root.findall('.//*[@style]')
-    assert [span.text for span in root.findall('.//span[@class="note"]')] == [
+    assert all(span.keys() == ['data-pos'] and len(span) == 0 for span in notes)
+    assert [span.text for span in notes] == [
         '\U0001d160',
         '\U0001d160',
-        '\U0001d15f',
+        '\U0001d15f\U0001d16d',
         '\U0001d160',
         '\U0001d15f',
         '\U0001d15e',
         '\U0001d15e',
     ]
-    assert len(root.findall('.//span[@class="dot"]')) == 1
 
 
 def test_lyric_rows():
@@ -134,6 +126,7 @@ def test_lyric_rows():
         melody.replace('D E F G', 'D E F'),
         melody.replace('D E F G', '^D E F G'),
         melody.replace('D E F G', '[DE] E F G'),
+        melody.replace('D E F G', '"G" D E F G'),
         melody + '\nD E F G |',
         melody + '\nw: Step-ping',
         melody + '\nw: Step-ping up the scale and down a-gain',

@@ -18,7 +18,6 @@ key_signatures = {
 class Note:
     pitch: str
     duration: Fraction
-    chord: str = ''
 
 
 @dataclass
@@ -28,26 +27,21 @@ class Measure:
     final: bool = False
 
 
-def read_notes(source: str, unit: Fraction) -> list[Measure]:  # noqa: C901
+def read_notes(source: str, unit: Fraction) -> list[Measure]:
     """Read one complete line of bars; reject syntax we cannot render."""
     measures = [Measure()]
-    chord = ''
     position = 0
     while position < len(source):
-        token = match(r'\s+|"[^"\n]+"|\|\]|\||[A-Ga-g](?:\d+(?:/\d+)?|/\d*)?', source[position:])
+        token = match(r'\s+|\|\]|\||[A-Ga-g](?:\d+(?:/\d+)?|/\d*)?', source[position:])
         if token is None:
             raise ValueError(f'Unsupported ABC near {source[position:]!r}')
         value = token[0]
         position += len(value)
         if value.isspace():
             continue
-        if value.startswith('"'):
-            if chord:
-                raise ValueError('A chord must precede a note')
-            chord = value[1:-1]
-        elif value.startswith('|'):
-            if not measures[-1].notes or chord:
-                raise ValueError('Empty bar or chord without a note')
+        if value.startswith('|'):
+            if not measures[-1].notes:
+                raise ValueError('Empty bar')
             measures[-1].final = value == '|]'
             if measures[-1].final and source[position:].strip():
                 raise ValueError('Music follows the final bar')
@@ -62,9 +56,8 @@ def read_notes(source: str, unit: Fraction) -> list[Measure]:  # noqa: C901
                 raise ValueError(f'Unsupported note duration: {value}')
             if value[0] not in 'DEFGABcdefg':
                 raise ValueError(f'Pitch outside D4 to G5: {value}')
-            measures[-1].notes.append(Note(value[0], duration, chord))
-            chord = ''
-    if measures[-1].notes or chord:
+            measures[-1].notes.append(Note(value[0], duration))
+    if measures[-1].notes:
         raise ValueError('End each music line with a barline')
     return measures[:-1]
 
@@ -131,10 +124,11 @@ def columns(notes: list[Note]) -> list[int]:
 
 
 def glyph(duration: Fraction) -> str:
-    """Choose the Unicode note glyph; dotted quarters use a separate dot."""
+    """Choose the Unicode note glyph and any augmentation dot."""
     return {
         Fraction(1, 8): '\U0001d160',  # musical symbol eighth note
         Fraction(1, 2): '\U0001d15e',  # musical symbol half note
+        Fraction(3, 8): '\U0001d15f\U0001d16d',  # quarter note with combining augmentation dot
     }.get(duration, '\U0001d15f')  # musical symbol quarter note
 
 
