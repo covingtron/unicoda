@@ -1,18 +1,17 @@
 """Check the experimental Unicode music renderer with an original scale exercise."""
 
 from fractions import Fraction
-from pathlib import Path
 from xml.etree.ElementTree import fromstring
 
 from pytest import mark, raises
 
 from unicoda import parse_abc, render_abc
 
-scale = (Path(__file__).parent / 'examples' / 'scale.abc').read_text().strip()
+melody = 'M:4/4\nL:1/4\nK:C\nD E F G | A B c d |]'
 
 
-def test_scale():
-    headers, measures = parse_abc(scale)
+def test_parse_melody():
+    headers, measures = parse_abc(melody)
     assert headers['K'] == 'C'
     assert len(measures) == 2
     assert [note.pitch for note in measures[1].notes] == ['A', 'B', 'c', 'd']
@@ -32,14 +31,14 @@ def test_subdivisions():
 
 
 def test_alignment():
-    _, measures = parse_abc(scale + '\nw: Step-ping up _ | then~we * come down')
+    _, measures = parse_abc(melody + '\nw: Step-ping up _ | then~we * come down')
     assert measures[0].lyrics == [['Step-', 'ping', 'up', '_']]
     assert measures[1].lyrics == [['then we', '', 'come', 'down']]
 
 
 def test_lyric_bar_skips():
     _, measures = parse_abc(
-        scale + '\nw: first | then we come down\nw: one two three four | last |'
+        melody + '\nw: first | then we come down\nw: one two three four | last |'
     )
     assert measures[0].lyrics == [['first', '', '', ''], ['one', 'two', 'three', 'four']]
     assert measures[1].lyrics == [['then', 'we', 'come', 'down'], ['last', '', '', '']]
@@ -89,7 +88,7 @@ def test_coordinates():
 
 
 def test_lyric_rows():
-    source = scale + (
+    source = melody + (
         '\nw: Step-ping up _ | then~we * come down\nw: One two three four | five six _ *'
     )
     source = source.replace('|]', '|') + '\nD E F G |]'
@@ -122,15 +121,15 @@ def test_lyric_rows():
     'source',
     (
         '',
-        scale.replace('K:C', 'K:D'),
-        scale.replace('M:4/4', 'M:3/4'),
-        scale.replace('D E F G', 'D E F'),
-        scale.replace('D E F G', '^D E F G'),
-        scale.replace('D E F G', '[DE] E F G'),
-        scale + '\nD E F G |',
-        scale + '\nw: Step-ping',
-        scale + '\nw: Step-ping up the scale and down a-gain',
-        scale + '\nw: one two three four five six seven eight' * 27,
+        melody.replace('K:C', 'K:D'),
+        melody.replace('M:4/4', 'M:3/4'),
+        melody.replace('D E F G', 'D E F'),
+        melody.replace('D E F G', '^D E F G'),
+        melody.replace('D E F G', '[DE] E F G'),
+        melody + '\nD E F G |',
+        melody + '\nw: Step-ping',
+        melody + '\nw: Step-ping up the scale and down a-gain',
+        melody + '\nw: one two three four five six seven eight' * 27,
     ),
 )
 def test_reject_unsupported_notation(source: str):

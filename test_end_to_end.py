@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from unicoda import format_abc, render_abc
+from unicoda import format_abc, parse_abc, render_abc
 
 example = Path(__file__).parent / 'examples' / 'scale'
 
@@ -12,7 +12,13 @@ def test_scale():
     expected = example.with_suffix('.html').read_text()
     assert render_abc(source) == expected
     assert format_abc(source) == expected
-    assert render_abc(source.replace('K:C', 'K:G')).count('class="key"') == 1
+    _, measures = parse_abc(source)
+    assert ''.join(note.pitch for measure in measures for note in measure.notes) == (
+        'GABcdefggfedcBAG'
+    )
+    assert expected.count('class="lyrics"') == 8
+    assert expected.count('class="key"') == 1
+    assert render_abc(source.replace('K:G', 'K:C')).count('class="key"') == 0
 
 
 if __name__ == '__main__':
