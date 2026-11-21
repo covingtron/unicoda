@@ -7,6 +7,8 @@
 
     .unicoda {
         --staff-size: 4.8rem;
+        --staff-top: 2rem;
+        --top-line: calc(var(--staff-top) + 0.036rem);
         --slot: 0.75rem;
         --staff-step: calc(var(--staff-size) * 0.122);
         --note-size: calc(var(--staff-step) * 4);
@@ -75,21 +77,23 @@
         font-size: var(--staff-size);
         left: calc(-0.05 * var(--staff-size) * var(--stretch));
         position: absolute;
-        top: 2rem;
+        top: var(--staff-top);
         transform: scaleX(var(--stretch));
         transform-origin: left top;
     }
 
+    .unicoda .measure > div > [data-pos] {
+        top: calc(var(--top-line) + var(--pitch) * var(--staff-step) - var(--anchor));
+    }
+
     .unicoda .measure > div > [data-pos]:not([data-pos*='-']) {
-        top: calc(
-            2.036rem + var(--pitch) * var(--staff-step) - var(--note-size) * var(--head-center)
-        );
+        --anchor: calc((0.5 + 0.373 * var(--stem-direction)) * 1em);
         transform: scaleY(var(--stem-direction));
     }
 
     .unicoda .measure > div > :first-child[data-pos*='-'] {
+        --anchor: 0.873em;
         left: 0.1rem;
-        top: calc(2.036rem + 6 * var(--staff-step) - var(--note-size) * 0.873);
     }
 
     .unicoda [data-pos*='-'] {
@@ -99,18 +103,18 @@
     }
 
     .unicoda .measure > div > [data-pos*='-']:not(:first-child, [data-pos$='-1']) {
+        --anchor: 0.8645em;
         font-size: 1.5rem;
-        top: calc(2.036rem + var(--pitch) * var(--staff-step) - 1.5rem * 0.8645);
     }
 
     .unicoda .measure > div > [data-pos$='-1'] {
         --column: -1;
         font: bold 1.7rem/1.37 serif;
-        top: 2rem;
+        top: var(--staff-top);
     }
 
     .unicoda .measure > div > [data-pos='a-1'] {
-        top: calc(2rem + 1.7rem * 1.37);
+        top: calc(var(--staff-top) + 1lh);
     }
 
     .unicoda .measure:has(> div > :first-child[data-pos$='-9']),
@@ -198,57 +202,46 @@
     .unicoda .measure > div > [data-pos^='g'] {
         --pitch: -1;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='f'] {
         --pitch: 0;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='e'] {
         --pitch: 1;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='d'] {
         --pitch: 2;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='c'] {
         --pitch: 3;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='B'] {
         --pitch: 4;
         --stem-direction: -1;
-        --head-center: 0.127;
     }
     .unicoda .measure > div > [data-pos^='A'] {
         --pitch: 5;
         --stem-direction: 1;
-        --head-center: 0.873;
     }
     .unicoda .measure > div > [data-pos^='G'] {
         --pitch: 6;
         --stem-direction: 1;
-        --head-center: 0.873;
     }
     .unicoda .measure > div > [data-pos^='F'] {
         --pitch: 7;
         --stem-direction: 1;
-        --head-center: 0.873;
     }
     .unicoda .measure > div > [data-pos^='E'] {
         --pitch: 8;
         --stem-direction: 1;
-        --head-center: 0.873;
     }
     .unicoda .measure > div > [data-pos^='D'] {
         --pitch: 9;
         --stem-direction: 1;
-        --head-center: 0.873;
     }
 </style>
 <figure class="unicoda">
