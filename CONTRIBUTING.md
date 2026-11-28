@@ -4,6 +4,7 @@ programmer. Never waste time as Captain Obvious.
 Write self-documenting code as simply as possible. Functional, rule-of-three style is often
 simplest:
 * Define before use, close to use
+* Except when accumulating iteratively, prefer single static assignment
 * Inline single-use literals
 * For twice-used literals:
     - Rendered templates, tests, and migrations do not count as usages
@@ -51,6 +52,7 @@ simplest:
   `--keyword=arguments`
 * Use Python 3.12+ idioms like:
     - `from pytest import mark; @mark.parametrize()`
+    - Set `autospec=True` on `patch` and `patch.object` when creating magic mocks
     - `from pathlib import Path; Path('a') / 'b'`
     - `from subprocess import check_call, check_output; check_call(...); check_output(...)`
     - Usually easiest to not `re.compile` at all than worry about aliasing the builtin
