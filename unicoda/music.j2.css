@@ -4,7 +4,7 @@
         format('truetype');
 }
 
-.unicoda {
+figure.unicoda {
     --staff-size: 4.8rem;
     --staff-top: 2rem;
     --top-line: calc(var(--staff-top) + 0.036rem);
@@ -17,6 +17,7 @@
     flex-wrap: wrap;
     gap: 0.5rem 0;
     overflow-x: auto;
+    width: auto;
 }
 
 .unicoda > :is(figcaption, details) {
